@@ -1,0 +1,7 @@
+bin/
+obj/
+.DS_Store
+Data/quests.json
+Data/*.tmp
+.idea/
+.vscode/
