@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Конструктор интерактивных текстовых квестов">
+    <title>Quest Constructor</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+<div class="app-shell">
+    <aside class="sidebar">
+        <a class="brand" href="/" aria-label="Quest Constructor">
+            <span class="brand-mark">Q</span>
+            <span>
+                <strong>Quest Constructor</strong>
+                <small>Истории с выбором</small>
+            </span>
+        </a>
+
+        <button class="button button-primary button-full" id="new-quest-button" type="button">
+            <span>＋</span> Новый квест
+        </button>
+
+        <div class="sidebar-caption">
+            <span>Мои проекты</span>
+            <span id="quest-count">0</span>
+        </div>
+        <nav class="quest-list" id="quest-list" aria-label="Список квестов"></nav>
+
+        <div class="sidebar-tip">
+            <strong>Подсказка</strong>
+            <p>Добавьте хотя бы одну концовку и убедитесь, что до неё можно добраться.</p>
+        </div>
+    </aside>
+
+    <main class="main">
+        <header class="topbar">
+            <div>
+                <p class="eyebrow">Интерактивный редактор</p>
+                <h1 id="page-title">Загрузка...</h1>
+            </div>
+            <div class="topbar-actions">
+                <button class="button button-ghost" id="validate-button" type="button">Проверить</button>
+                <button class="button button-secondary" id="play-button" type="button">▶ Пройти</button>
+                <button class="button button-primary" id="save-button" type="button">Сохранить</button>
+            </div>
+        </header>
+
+        <div class="notice hidden" id="notice" role="status"></div>
+
+        <section class="empty-state hidden" id="empty-state">
+            <div class="empty-icon">✦</div>
+            <h2>Создайте первую историю</h2>
+            <p>Разбейте сюжет на сцены, соедините их вариантами выбора и добавьте несколько концовок.</p>
+            <button class="button button-primary" id="empty-new-button" type="button">Создать квест</button>
+        </section>
+
+        <section class="editor hidden" id="editor">
+            <div class="quest-overview panel">
+                <div class="field field-wide">
+                    <label for="quest-title">Название квеста</label>
+                    <input id="quest-title" maxlength="100" placeholder="Например: Тайна старого маяка">
+                </div>
+                <div class="field field-wide">
+                    <label for="quest-description">Краткое описание</label>
+                    <textarea id="quest-description" rows="2" maxlength="500"
+                              placeholder="О чём эта история?"></textarea>
+                </div>
+                <div class="stats-row">
+                    <div class="mini-stat"><strong id="scene-stat">0</strong><span>сцен</span></div>
+                    <div class="mini-stat"><strong id="ending-stat">0</strong><span>концовок</span></div>
+                    <div class="mini-stat"><strong id="play-stat">0</strong><span>запусков</span></div>
+                    <div class="mini-stat"><strong id="completion-stat">0</strong><span>прохождений</span></div>
+                </div>
+            </div>
+
+            <div class="workspace">
+                <aside class="scene-sidebar panel">
+                    <div class="section-heading">
+                        <div>
+                            <span class="section-number">01</span>
+                            <h2>Сцены</h2>
+                        </div>
+                        <button class="icon-button" id="add-scene-button" type="button" title="Добавить сцену">＋</button>
+                    </div>
+                    <div class="scene-list" id="scene-list"></div>
+                </aside>
+
+                <section class="scene-editor panel" id="scene-editor">
+                    <div class="scene-editor-empty">
+                        <h2>Выберите сцену</h2>
+                        <p>Настройки выбранной сцены появятся здесь.</p>
+                    </div>
+                </section>
+            </div>
+        </section>
+
+        <section class="playground hidden" id="playground">
+            <button class="back-button" id="back-to-editor-button" type="button">← Вернуться в редактор</button>
+            <div class="game-layout">
+                <article class="game-card">
+                    <div class="game-meta">
+                        <span id="game-quest-title">Квест</span>
+                        <span class="health">Здоровье: <strong id="game-health">100</strong></span>
+                    </div>
+                    <p class="eyebrow">Текущая сцена</p>
+                    <h2 id="game-scene-title"></h2>
+                    <p class="game-text" id="game-scene-text"></p>
+                    <div class="choice-list" id="game-choices"></div>
+                    <div class="ending hidden" id="game-ending">
+                        <span>Конец истории</span>
+                        <p id="game-ending-text"></p>
+                        <button class="button button-primary" id="restart-game-button" type="button">Начать заново</button>
+                    </div>
+                </article>
+
+                <aside class="inventory-card">
+                    <p class="eyebrow">Инвентарь</p>
+                    <div id="inventory-list" class="inventory-list"></div>
+                    <p class="inventory-empty" id="inventory-empty">Пока пусто</p>
+                </aside>
+            </div>
+        </section>
+    </main>
+</div>
+
+<dialog id="validation-dialog">
+    <div class="dialog-heading">
+        <div>
+            <p class="eyebrow">Проверка проекта</p>
+            <h2 id="validation-title">Результат</h2>
+        </div>
+        <button class="icon-button" id="close-validation-button" type="button">×</button>
+    </div>
+    <div class="validation-summary" id="validation-summary"></div>
+    <div class="validation-list" id="validation-list"></div>
+</dialog>
+
+<script src="/js/app.js" defer></script>
+</body>
+</html>
