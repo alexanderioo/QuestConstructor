@@ -21,6 +21,27 @@
     box-sizing: border-box;
 }
 
+/* Grid and flex children can otherwise widen their column to fit long text. */
+.main,
+.editor,
+.workspace,
+.quest-overview,
+.field,
+.stats-row,
+.scene-sidebar,
+.scene-list,
+.scene-item,
+.scene-editor,
+.scene-form-grid,
+.choices-section,
+.choice-row,
+.choice-details,
+.game-layout,
+.game-card,
+.inventory-card {
+    min-width: 0;
+}
+
 body {
     margin: 0;
     min-width: 320px;
@@ -244,6 +265,10 @@ button {
     margin-bottom: 26px;
 }
 
+.topbar > div:first-child {
+    min-width: 0;
+}
+
 .eyebrow {
     margin: 0 0 6px;
     color: var(--accent);
@@ -263,6 +288,7 @@ h1 {
     margin-bottom: 0;
     font-size: clamp(28px, 4vw, 44px);
     letter-spacing: -.045em;
+    overflow-wrap: anywhere;
 }
 
 h2 {
@@ -271,6 +297,8 @@ h2 {
 
 .topbar-actions {
     display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
     gap: 10px;
 }
 
@@ -334,12 +362,13 @@ select:focus {
 
 .stats-row {
     display: grid;
-    grid-template-columns: repeat(2, 70px);
+    grid-template-columns: repeat(2, minmax(82px, 1fr));
     gap: 8px;
 }
 
 .mini-stat {
-    padding: 10px;
+    min-width: 0;
+    padding: 10px 6px;
     border: 1px solid var(--line);
     border-radius: 11px;
     text-align: center;
@@ -358,7 +387,8 @@ select:focus {
 .mini-stat span {
     margin-top: 2px;
     color: var(--muted);
-    font-size: 10px;
+    font-size: 9px;
+    white-space: nowrap;
 }
 
 .workspace {
@@ -386,6 +416,7 @@ select:focus {
 
 .section-heading > div {
     display: flex;
+    min-width: 0;
     gap: 10px;
     align-items: baseline;
 }
@@ -393,6 +424,7 @@ select:focus {
 .section-heading h2 {
     margin: 0;
     font-size: 20px;
+    overflow-wrap: anywhere;
 }
 
 .section-number {
@@ -420,7 +452,10 @@ select:focus {
 
 .scene-item {
     position: relative;
+    min-width: 0;
+    max-width: 100%;
     width: 100%;
+    overflow: hidden;
     padding: 12px 12px 12px 38px;
     border: 1px solid var(--line);
     border-radius: 12px;
@@ -541,7 +576,7 @@ select:focus {
 .choice-details {
     display: grid;
     grid-column: 1 / -1;
-    grid-template-columns: repeat(3, 1fr) auto;
+    grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
     gap: 10px;
     align-items: end;
 }
@@ -566,6 +601,8 @@ select:focus {
 
 .scene-actions {
     display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
     justify-content: space-between;
     margin-top: 28px;
 }
@@ -577,6 +614,7 @@ select:focus {
     border-radius: 12px;
     background: rgba(217, 255, 104, .08);
     color: var(--accent);
+    overflow-wrap: anywhere;
 }
 
 .notice.error {
@@ -631,6 +669,8 @@ select:focus {
 
 .game-meta {
     display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
     justify-content: space-between;
     margin-bottom: 74px;
     color: var(--muted);
@@ -644,12 +684,14 @@ select:focus {
 .game-card h2 {
     margin-bottom: 18px;
     font-size: clamp(30px, 5vw, 52px);
+    overflow-wrap: anywhere;
 }
 
 .game-text {
     color: #cbc8be;
     font-size: 18px;
     line-height: 1.75;
+    overflow-wrap: anywhere;
 }
 
 .choice-list {
@@ -669,6 +711,12 @@ select:focus {
     background: var(--surface-2);
     color: var(--text);
     text-align: left;
+    overflow-wrap: anywhere;
+}
+
+.game-choice > span,
+.game-choice > small {
+    min-width: 0;
 }
 
 .game-choice:hover:not(:disabled) {
@@ -694,6 +742,7 @@ select:focus {
     border: 1px solid var(--line);
     border-radius: 10px;
     background: var(--surface-2);
+    overflow-wrap: anywhere;
 }
 
 .inventory-empty {
@@ -720,6 +769,7 @@ select:focus {
 .ending p {
     margin: 12px 0 20px;
     line-height: 1.6;
+    overflow-wrap: anywhere;
 }
 
 dialog {
@@ -759,6 +809,11 @@ dialog::backdrop {
     border-top: 1px solid var(--line);
 }
 
+.validation-item > * {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
 .validation-level {
     color: var(--warning);
     font-size: 11px;
@@ -776,6 +831,7 @@ dialog::backdrop {
     border-radius: 13px;
     color: var(--accent);
     text-align: center;
+    overflow-wrap: anywhere;
 }
 
 .hidden {
@@ -798,6 +854,34 @@ dialog::backdrop {
 
     .inventory-card {
         order: -1;
+    }
+}
+
+@media (max-width: 1150px) {
+    .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .workspace {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .scene-sidebar,
+    .scene-editor {
+        min-height: 0;
+    }
+
+    .scene-list {
+        grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
+    }
+
+    .choice-details {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .choice-details > .toggle-card {
+        grid-column: 1 / -1;
     }
 }
 
@@ -824,11 +908,6 @@ dialog::backdrop {
 
     .main {
         padding: 28px 20px 60px;
-    }
-
-    .topbar {
-        align-items: flex-start;
-        flex-direction: column;
     }
 
     .workspace,
@@ -871,8 +950,13 @@ dialog::backdrop {
         grid-template-columns: 1fr;
     }
 
+    .choice-details > .toggle-card {
+        grid-column: auto;
+    }
+
     .choice-row .remove-choice {
         position: absolute;
-        right: 0;
+        top: 14px;
+        right: 14px;
     }
 }
