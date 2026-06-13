@@ -12,23 +12,47 @@ public sealed class QuestRepository
     };
 
     private readonly string _filePath;
+    private readonly string _sampleDataMarkerPath;
     private readonly SemaphoreSlim _lock = new(1, 1);
 
     public QuestRepository(IWebHostEnvironment environment)
     {
         _filePath = Path.Combine(environment.ContentRootPath, "Data", "quests.json");
+        _sampleDataMarkerPath = Path.Combine(environment.ContentRootPath, "Data", ".sample-data-v2");
     }
 
     public async Task InitializeAsync()
     {
         Directory.CreateDirectory(Path.GetDirectoryName(_filePath)!);
-        if (File.Exists(_filePath))
+        var samples = SampleQuestFactory.CreateAll();
+
+        if (!File.Exists(_filePath))
+        {
+            await WriteAllAsync(samples);
+            File.WriteAllText(_sampleDataMarkerPath, "");
+            return;
+        }
+
+        if (File.Exists(_sampleDataMarkerPath))
         {
             return;
         }
 
-        var sample = SampleQuestFactory.Create();
-        await WriteAllAsync([sample]);
+        var quests = await ReadAllAsync();
+        var existingTitles = quests
+            .Select(quest => quest.Title)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var sample in samples)
+        {
+            if (!existingTitles.Contains(sample.Title))
+            {
+                quests.Add(sample);
+            }
+        }
+
+        await WriteAllAsync(quests);
+        File.WriteAllText(_sampleDataMarkerPath, "");
     }
 
     public async Task<IReadOnlyList<Quest>> GetAllAsync()
