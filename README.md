@@ -1,4 +1,5 @@
 # Quest Constructor
+Frolov Alexander 231-322
 
 Веб-конструктор интерактивных текстовых квестов. Серверная часть написана на
 C# и ASP.NET Core, интерфейс — на HTML, CSS и JavaScript.
